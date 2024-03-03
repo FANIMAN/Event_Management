@@ -129,7 +129,7 @@
                     stroke-linejoin="round" />
                 </svg>
                 <!-- <p class="text-[#171625] font-bold">{{ formatDate(eventDetails && eventDetails.time) }}</p> -->
-                <p class="text-[#171625] font-bold">የካቲት 1, 2016</p>
+                <p class="text-[#171625] font-bold">መጋቢት 2, 2016</p>
               </div>
   
               <div class="flex flex-row gap-2 items-center">
