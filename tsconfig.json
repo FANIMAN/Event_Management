@@ -1,11 +1,11 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json",
-  "compilerOptions": {
-    "types": ["@nuxt/types", "node"],
-    // "module": "commonjs",
-    // "esModuleInterop": true,
-    // "strict": true
-  },
+  "extends": "./.nuxt/tsconfig.json"
+  // "compilerOptions": {
+  //   "types": ["@nuxt/types", "node"],
+  //   // "module": "commonjs",
+  //   // "esModuleInterop": true,
+  //   // "strict": true
+  // },
   // "include": ["server/**/*.ts"]
 }

@@ -182,8 +182,11 @@
                         <div>
                             <label for="phoneNumber" class="block text-sm font-bold text-gray-700 mb-1">Phone
                                 Number</label>
-                            <input type="text" id="phoneNumber" class="w-full px-4 py-2 border rounded-md"
-                                placeholder="+251 900000000">
+                            <input v-model="phoneNumber" @input="validatePhoneNumber" type="text" id="phoneNumber"
+                                class="w-full px-4 py-2 border rounded-md" :class="{
+                                    valid: isValidPhoneNumber,
+                                    invalid: !isValidPhoneNumber,
+                                }" placeholder="Enter your phone number (09...)">
                         </div>
 
                         <!-- Input 3 -->
@@ -211,7 +214,7 @@
                     </div>
 
                     <!-- Pay now Button -->
-                    <button @click="pay"
+                    <button @click="pay" :disabled="!isValidPhoneNumber"
                         class="bg-[#D3AF35] hover:bg-[#D3AF39] text-white font-bold py-3 px-4 text-xl rounded mt-10 md:mt-0 mb-10 md:mb-0">
                         Pay now
 
@@ -225,9 +228,36 @@
 
         </div>
 
+        <!-- Modal -->
+        <div v-if="showInitiatePaymentModal" class="fixed inset-0 flex items-center justify-center z-50">
+            <!-- Modal overlay -->
+            <div class="absolute inset-0 bg-black opacity-50"></div>
+
+            <!-- Modal content -->
+            <div class="relative bg-white rounded-lg shadow-md w-full md:w-4/5 p-6 py-32 overflow-y-auto h-full md:h-[700px]">
+                <button @click="closeModal" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+
+            <!-- iframe to display payment link -->
+        <!-- <iframe :src="paymentLink" class="w-full h-full"></iframe> -->
+        <iframe :src="paymentLink" class="w-full h-full iframe-no-scroll" style="overflow: hidden; border: none;" ></iframe>
+
+
+
+            </div>
+
+
+        </div>
+
 
         <!-- Display error message -->
-        <p v-if="showErrorMessage" class="p-6 md:p-0 fixed bottom-[-15px] md:bottom-[20px] rounded-lg font-bold text-red-900 text-[13px] md:text-xl">
+        <p v-if="showErrorMessage"
+            class="p-6 md:p-0 fixed bottom-[-15px] md:bottom-[20px] rounded-lg font-bold text-red-900 text-[13px] md:text-xl">
             Tickets will be available starting from tomorrow
         </p>
 
@@ -240,7 +270,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-
+import axios from 'axios';
 const router = useRouter();
 const activeTab = ref('aboutEvent');
 const paymentReason = ref('payment for event')
@@ -248,6 +278,10 @@ const numberOfTickets = ref(1);
 const selectedPaymentId = ref(null)
 const ticketPrice = ref(400); // Change this to your actual ticket price
 const eid = ref(null)
+const phoneNumber = ref('');
+const isValidPhoneNumber = ref(false);
+const showInitiatePaymentModal = ref(false);
+const paymentLink = ref(null);
 
 const showErrorMessage = ref(false);
 const errorMessage = ref('Tickets will be available starting from tomorrow');
@@ -277,8 +311,35 @@ const calculateDaysLeft = () => {
     return differenceInDays
 };
 
-const pay = () => {
-    showErrorMessage.value = true; // Show error message
+const pay = async () => {
+    // showErrorMessage.value = true; // Show error message
+
+    const data = {
+        ticket_id: ticketPrice.value === 400 ? '245f618a-db8a-4b55-a707-67b83a29086e' : '402085c1-05d4-4779-b95a-2c51e068b51d',
+        quantity: numberOfTickets.value,
+        phone: phoneNumber.value
+    }
+    // console.log(data)
+
+    await axios.post('https://eventapi.santim.io/api/v2/buy-ticket', data)
+        .then(response => {
+            if (response.status === 200 || response.status === 201) {
+                // console.log(response.data.data)
+                paymentLink.value = response.data.data
+                // console.log(paymentLink.value)
+                // showInitiatePaymentModal.value = true
+                // console.log(paymentLink.value);
+                // Open payment link in a new tab
+                // window.open(paymentLink.value, '_blank');
+
+                 // Redirect to payment link in the same tab
+                 window.location.href = paymentLink.value;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching event details:', error);
+        });
+
 
     // Automatically hide the error message after 5 seconds
     setTimeout(() => {
@@ -286,12 +347,32 @@ const pay = () => {
     }, 10000);
 };
 
+const validatePhoneNumber = () => {
+    const validationRegex = /((^(\+251|0)\d{9}))/;
+    if (
+        phoneNumber.value.match(validationRegex) &&
+        phoneNumber.value !== null &&
+        phoneNumber.value !== "" &&
+        phoneNumber.value.length < 14 &&
+        phoneNumber.value.length > 9
+    ) {
+        if (phoneNumber.value.substr(0, 1) === "0") {
+            phoneNumber.value = "+251" + phoneNumber.value.substr(1);
+        }
+        isValidPhoneNumber.value = true;
+        // console.log(isValidPhoneNumber.value)
+    } else {
+        isValidPhoneNumber.value = false;
+        // console.log(isValidPhoneNumber.value)
+    }
+};
+
 const clearErrorMessage = () => {
     errorMessage.value = '';
 };
 
 const closeModal = () => {
-    isModalOpen.value = false;
+    showInitiatePaymentModal.value = false;
 };
 
 const increment = () => {
@@ -351,6 +432,22 @@ const amount = computed(() => {
     border-radius: 0.5rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
     padding: 1.5rem;
+}
+
+.selectedd {
+    border: 4px solid rgb(211, 175, 14);
+    /* transition: all 0.1s ease-in-out; */
+}
+
+.invalid {
+    border: 1px solid rgb(133, 4, 4);
+}
+
+.valid {
+    border: 1px solid green;
+}
+.iframe-no-scroll {
+    overflow: hidden;
 }
 
 /* Additional styles as needed */

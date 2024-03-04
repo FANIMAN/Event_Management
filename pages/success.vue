@@ -1,8 +1,8 @@
 <template>
-    <div class="bg-gray-200 min-h-screen flex items-center justify-center">
-      <div class="bg-white rounded-lg shadow-md w-full md:w-3/5"> <!-- Adjusted width to 3/5 of the screen -->
-     
-        <!-- Modal -->
+  <div class="bg-gray-200 min-h-screen flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-md w-full md:w-3/5"> <!-- Adjusted width to 3/5 of the screen -->
+
+      <!-- Modal -->
       <div class="fixed inset-0 flex items-center justify-center z-50">
         <!-- Modal overlay -->
         <div class="absolute inset-0 bg-black opacity-50"></div>
@@ -31,10 +31,12 @@
             </div>
             <div class="flex flex-col gap-16 w-full md:w-1/2 p-6 items-center">
 
-              <img src="@/static/qr.png" alt="Image" class="">
+              <!-- <img src="@/static/qr.png" alt="Image" class=""> -->
+              <img :src="qrCodeUrl" alt="QR code" class="w-80 h-80" />
+
 
               <!-- Download QR Button -->
-              <button
+              <button @click="downloadQRCode"
                 class="w-full font-bold bg-white hover:bg-[#D3AF39] text-[#D3AF39] hover:text-white font-bold py-3 px-5 border border-[#D3AF39] border-1 rounded-md">Download
                 QR</button>
 
@@ -45,63 +47,103 @@
 
 
       </div>
-  
-  
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from 'vue';
 
-  import { useRouter } from 'vue-router';
+
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import QRCode from "qrcode";
+
+import { useRouter } from 'vue-router';
 
 // const isModalOpen = ref(true);
 const router = useRouter();
- 
-  
-  
-  // Function to close the modal
-  const closeModal = () => {
-    // isModalOpen.value = false;
-    router.push('/');
+const ticketID = ref('');
+const qrCodeUrl = ref('');
 
+
+
+onMounted(() => {
+  // Get the ticketId from the query parameters
+  const { ticketId } = router.currentRoute.value.query;
+  if (ticketId) {
+    ticketID.value = ticketId;
+    // console.log(ticketID.value)
+    generateQRCode(ticketID.value)
+  }
+});
+
+
+
+// Function to close the modal
+const closeModal = () => {
+  // isModalOpen.value = false;
+  router.push('/');
+
+};
+const generateQRCode = (ticketID) => {
+  const url = `ticketId=${ticketID}`;
+  // console.log(url)
+  const options = {
+    width: 500,
+    height: 500,
+    margin: 1,
   };
-  
+  QRCode.toDataURL(url, options, (err, dataURL) => {
+    if (err) {
+      console.error(err);
+    } else {
+      qrCodeUrl.value = dataURL;
+      // this.$refs.qrCodeContainer.innerHTML = `<img src="${dataURL}" alt="QR code">`;
+    }
+  });
+};
+const downloadQRCode = () => {
+  const link = document.createElement("a");
+  link.href = qrCodeUrl.value;
+  link.download = "santimEventQR.png";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 
-  </script>
-  
-  
-  <style scoped>
-  .selectedd {
-    /* border: 4px solid rgb(211, 175, 14); */
-    /* transition: all 0.1s ease-in-out; */
-    box-sizing: content-box;
-    /* Ensure the border is outside the dimensions of the element */
-    border: 4px solid rgb(211, 175, 14);
-  }
-  
-  
-  /* Styles for the modal overlay */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 50;
-    /* Ensure the overlay is above other content */
-  }
-  
-  /* Styles for the modal content */
-  .modal-content {
-    position: relative;
-    z-index: 51;
-    /* Ensure the content is above the overlay */
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
-    padding: 1.5rem;
-  }
-  
-  /* Additional styles as needed */
-  </style>
-  
+};
+
+
+</script>
+
+
+<style scoped>
+.selectedd {
+  /* border: 4px solid rgb(211, 175, 14); */
+  /* transition: all 0.1s ease-in-out; */
+  box-sizing: content-box;
+  /* Ensure the border is outside the dimensions of the element */
+  border: 4px solid rgb(211, 175, 14);
+}
+
+
+/* Styles for the modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  /* Ensure the overlay is above other content */
+}
+
+/* Styles for the modal content */
+.modal-content {
+  position: relative;
+  z-index: 51;
+  /* Ensure the content is above the overlay */
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  padding: 1.5rem;
+}
+
+/* Additional styles as needed */
+</style>
