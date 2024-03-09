@@ -331,11 +331,12 @@ const calculateDaysLeft = (daysLeft) => {
     const differenceInHours = differenceInTime / (1000 * 3600);
     const daysLeftValue = Math.floor(differenceInHours / 24); // Number of full days left
     const remainingHours = Math.ceil(differenceInHours % 24); // Remaining hours
-
-    if (daysLeftValue <= 0 && remainingHours >= 0 && remainingHours < 8) {
+    // console.log(daysLeftValue)
+    // console.log(remainingHours)
+    if (daysLeftValue <= 0 && remainingHours >= 0 && remainingHours < 9) {
         return 'Today'
     }
-    else if (daysLeftValue <= 0 && remainingHours >= 8 && remainingHours < 24) {
+    else if (daysLeftValue <= 0 && remainingHours >= 9 && remainingHours <= 24) {
         return 1
     }
     else if (daysLeftValue < 0 && remainingHours >= -6) {
