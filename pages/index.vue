@@ -20,18 +20,17 @@
                             <p class="text-gray-600">በጥለት ሚዲያ እና ኮሙኒኬሽን</p>
                             <!-- <p class="text-gray-600">by {{ eventDetails && eventDetails.name }}</p> -->
 
-                            <!-- <p
-                  class="px-3 py-[2px] bg-yellow-500 bg-opacity-20 rounded-xl text-[#D3AF35] font-bold text-sm border border-[#D3AF35]">
-                  {{ daysLeft }}
-                  <span v-if="daysLeft === 1 || daysLeft === 0">day</span>
-                  <span v-else>days</span>
-                  left
-                </p> -->
+
+
                             <p
                                 class="px-3 py-[2px] bg-yellow-500 bg-opacity-20 rounded-xl text-[#D3AF35] font-bold text-sm border border-[#D3AF35]">
-                                <!-- Use a ternary operator to conditionally render the appropriate message -->
-                                {{ calculateDaysLeft() <= 0 ? (calculateDaysLeft() == 0 ? 'Today' : 'Now') :
-                                    calculateDaysLeft() + ' ቀን ቀረዉ' }} </p>
+
+                                <span>{{ calculateDaysLeft('2024-03-10T15:00:00+03:00') }}</span>
+                                <span
+                                    v-if="calculateDaysLeft('2024-03-10T07:15:00+03:00') != 'Today' && calculateDaysLeft('2024-03-10T15:00:00+03:00') != 'Now' && calculateDaysLeft('2024-03-10T15:00:00+03:00') != 'Concluded'">
+                                    ቀን ቀረዉ</span>
+
+                            </p>
                         </div>
                     </div>
 
@@ -322,13 +321,53 @@ const formatTime = (dateString) => {
     return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 };
 
-const calculateDaysLeft = () => {
-    const eventDate = new Date('2024-03-10 14:00:00 +0000 UTC');
+
+const calculateDaysLeft = (daysLeft) => {
+    // const eventDate = new Date('2024-03-09T15:00:00+03:00');
+    const eventDate = new Date(daysLeft);
+
     const currentDate = new Date();
     const differenceInTime = eventDate.getTime() - currentDate.getTime();
-    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
-    return differenceInDays
+    const differenceInHours = differenceInTime / (1000 * 3600);
+    const daysLeftValue = Math.floor(differenceInHours / 24); // Number of full days left
+    const remainingHours = Math.ceil(differenceInHours % 24); // Remaining hours
+
+    if (daysLeftValue <= 0 && remainingHours >= 0 && remainingHours < 8) {
+        return 'Today'
+    }
+    else if (daysLeftValue <= 0 && remainingHours >= 8 && remainingHours < 24) {
+        return 1
+    }
+    else if (daysLeftValue < 0 && remainingHours >= -6) {
+        return 'Now'
+    }
+    else if (daysLeftValue <= 0 && remainingHours <= -6) {
+        return 'Concluded'
+
+    }
+    else {
+        if (remainingHours >= 12) {
+            return daysLeftValue
+            // daysLeft.value = daysLeftValue + 1; // Approximate to the higher value
+        } else {
+            return daysLeftValue
+            // daysLeft.value = daysLeftValue; // Approximate to the lower value
+        }
+    }
 };
+
+
+// Watch for changes in checkbox states and update ticketPrice accordingly
+watch([daysLeft], () => {
+    if (isVVIPChecked.value) {
+        selectedOption.value = 'VVIP';
+    } else if (isVIPChecked.value) {
+        selectedOption.value = 'VIP';
+    } else if (isRegularChecked.value) {
+        selectedOption.value = 'Regular';
+    }
+});
+
 
 const pay = async () => {
     // showErrorMessage.value = true; // Show error message
