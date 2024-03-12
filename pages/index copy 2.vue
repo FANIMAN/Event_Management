@@ -6,31 +6,24 @@
                 <!-- First Section - Image, Title, and Description and others-->
                 <div class="flex flex-col gap-6 w-full md:w-1/2 p-6">
                     <!-- First part - image -->
-                    <img src="~/assets/img/Cover.jpeg" alt="Image" class="w-full md:h-80 rounded-sm mb-4 md:mr-4">
+                    <img src="~/assets/img/Cover.jpg" alt="Image" class="w-full md:h-80 rounded-sm mb-4 md:mr-4">
 
                     <!-- Second part - Title and Description -->
                     <div class="flex flex-col gap-1">
                         <!-- Title -->
                         <!-- <h2 class="text-xl font-bold">{{ eventDetails && eventDetails.name }}</h2>    -->
-                        <h2 class="text-2xl font-bold">ዴልፊን ሚካኤል vs ዴንዜል ኦኒያንጎ</h2>
+                        <h2 class="text-2xl font-bold">ዶልፊን ሚካኤል vs ዴንዜል ኦኒያንጎ</h2>
 
                         <!-- Description -->
                         <div class="flex gap-4 items-center">
                             <!-- <p class="text-gray-600">by Tilet media & commuication</p>   -->
                             <p class="text-gray-600">በሶሎ ኢንተርናሽናል</p>
                             <!-- <p class="text-gray-600">by {{ eventDetails && eventDetails.name }}</p> -->
-
                             <p
                                 class="px-3 py-[2px] bg-yellow-500 bg-opacity-20 rounded-xl text-[#D3AF35] font-bold text-sm border border-[#D3AF35]">
-
-                                <span>{{ calculateDaysLeft('2024-03-24T15:00:00+03:00') }}</span>
-                                <span
-                                    v-if="calculateDaysLeft('2024-03-24T07:15:00+03:00') != 'Today' && calculateDaysLeft('2024-03-24T15:00:00+03:00') != 'Now' && calculateDaysLeft('2024-03-24T15:00:00+03:00') != 'Concluded'">
-                                    ቀን ቀረዉ</span>
-
-                            </p>
-
-
+                                <!-- Use a ternary operator to conditionally render the appropriate message -->
+                                {{ calculateDaysLeft() <= 0 ? (calculateDaysLeft() == 0 ? 'Today' : 'Now') :
+                                    calculateDaysLeft() + ' ቀን ቀረዉ' }} </p>
                         </div>
                     </div>
 
@@ -107,7 +100,7 @@
                     </div>
 
                     <!-- Forth part -->
-                    <div class="flex flex-row gap-10 md:gap-16 text-[12px] md:text-lg">
+                    <div class="flex flex-row gap-10  md:text-lg">
                         <div class="flex flex-row gap-2 items-center ">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -135,7 +128,7 @@
                                     stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                             <!-- <p class="text-[#171625] font-bold">{{ formatDate(eventDetails && eventDetails.time) }}</p> -->
-                            <p class="text-[#171625] font-bold">መጋቢት 15, 2016</p>
+                            <p class="text-[#171625] font-bold">መጋቢት 1, 2016</p>
                         </div>
 
                         <div class="flex flex-row gap-2 items-center">
@@ -155,11 +148,48 @@
 
                         </div>
 
-
-
-
-
                     </div>
+
+
+
+                    <div class="flex flex-row justify-between items-center text-[#171625] font-bold">
+                        <div class="flex flex-col gap-1">
+                            <label for="vipCheckbox">VVIP</label>
+                            <div class="flex items-center gap-2">
+                                <!-- <input type="checkbox" id="vipCheckbox" v-model="selectedOption" value="VVIP"
+                                    class="form-checkbox h-4 w-4 text-blue-600">
+                                <label for="vipCheckbox" class="">30,000</label> -->
+
+                                <input type="checkbox" id="vipCheckbox" v-model="vipSelected" value="VVIP" class="form-checkbox h-4 w-4 text-blue-600">
+<label for="vipCheckbox" class="">30,000</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="vipCheckbox">VIP</label>
+                            <div class="flex items-center gap-2">
+                                <!-- <input type="checkbox" id="vipCheckbox" v-model="selectedOption" value="VIP"
+                                    class="form-checkbox h-4 w-4 text-blue-600">
+                                <label for="vipCheckbox" class="">20,000</label> -->
+                                <input type="checkbox" id="vipCheckbox" v-model="vipSelected" value="VIP" class="form-checkbox h-4 w-4 text-blue-600">
+<label for="vipCheckbox" class="">20,000</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <label for="regularCheckbox">Regular</label>
+                            <div class="flex items-center gap-2">
+                                <!-- <input type="checkbox" id="regularCheckbox" v-model="selectedOption" value="Regular"
+                                    class="form-checkbox h-4 w-4 text-black-600">
+                                <label for="regularCheckbox" class="">10,000</label> -->
+
+                                <input type="checkbox" id="regularCheckbox" v-model="regularSelected" value="Regular" class="form-checkbox h-4 w-4 text-black-600">
+<label for="regularCheckbox" class="">10,000</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
 
                 <!-- Second Section - Input fields and pay button -->
@@ -184,47 +214,6 @@
                         </div>
 
                         <!-- Input 3 -->
-                        <div>
-
-
-                            <div class="flex gap-10">
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" v-model="selectedButton" value="30000" class="custom-radio">
-                                    <span class="hidden md:inline">VVIP - </span>
-                                    <span>30,000</span>
-
-                                </label>
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" v-model="selectedButton" value="20000" class="custom-radio">
-                                    <span class="hidden md:inline">VIP -</span>
-                                    <span>20,000</span>
-
-                                </label>
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" v-model="selectedButton" value="10000" class="custom-radio">
-                                    <span class="hidden md:inline">Regular -</span>
-                                    <span>10,000</span>
-
-                                </label>
-                            </div>
-
-
-
-                            <!-- Display amount to pay -->
-                            <p class="mt-6 md:mt-8 flex gap-1 items-center text-sm">
-                                <span>You’ll be paying</span>
-                                <span class="font-bold">{{ amount.toFixed(2) }}</span>
-                                <span>ETB</span>
-                            </p>
-
-
-
-
-                        </div>
-
-
-
-                        <!-- Input 4 -->
                         <div class="relative">
                             <label for="numberOfTickets" class="block text-sm font-bold text-gray-700 mb-1">Tickets to
                                 Buy</label>
@@ -238,7 +227,12 @@
                                     class="w-8 md:w-10 h-full py-1 mr-1 flex items-center justify-center bg-[#D3AF35] text-white font-bold rounded-md cursor-pointer focus:outline-none">+</button>
                             </div>
 
-
+                            <!-- Display amount to pay -->
+                            <p class="mt-5 flex gap-1 items-center text-sm">
+                                <span>You’ll be paying</span>
+                                <span class="font-bold">{{ amount.toFixed(2) }}</span>
+                                <span>ETB</span>
+                            </p>
                         </div>
 
                     </div>
@@ -290,8 +284,7 @@
                     </svg>
                 </button>
 
-                <!-- iframe to display payment link -->
-                <!-- <iframe :src="paymentLink" class="w-full h-full"></iframe> -->
+
                 <iframe :src="paymentLink" class="w-full h-full iframe-no-scroll"
                     style="overflow: hidden; border: none;"></iframe>
 
@@ -325,6 +318,30 @@ const paymentReason = ref('payment for event')
 const numberOfTickets = ref(1);
 const selectedPaymentId = ref(null)
 // const ticketPrice = ref(400); // Change this to your actual ticket price
+
+const ticketPrices = {
+    VVIP: 30000,
+    VIP: 20000,
+    Regular: 10000
+};
+
+
+const selectedOption = ref('VVIP');
+// const ticketPrice = ref(30000);
+// const ticketPrice = ref(0);
+
+
+// Watch for changes in selectedOption and update ticketPrice accordingly
+selectedOption.value = 'VVIP'; // Default selection
+const updatePrice = () => {
+    ticketPrice.value = ticketPrices[selectedOption.value];
+};
+updatePrice();
+
+
+const isVVIPChecked = ref(false);
+const isVIPChecked = ref(false);
+const isRegularChecked = ref(false);
 const eid = ref(null)
 const phoneNumber = ref('');
 const isValidPhoneNumber = ref(false);
@@ -337,7 +354,7 @@ const errorMessage = ref('Tickets will be available starting from tomorrow');
 
 const isModalOpen = ref(false);
 const eventDetails = ref(null);
-// const daysLeft = ref(null);
+const daysLeft = ref(null);
 
 
 // Function to format the date
@@ -352,107 +369,27 @@ const formatTime = (dateString) => {
     return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
 };
 
-
-const ticketPrice = ref(30000); // Default ticket price
-const selectedButton = ref(30000);
-
-// const updateTicketPrice = (price) => {
-//     ticketPrice.value = price;
-// };
-
-
-
-const selectButton = (price) => {
-    selectedButton.value = price;
-    updateTicketPrice(price);
-};
-
-
-
-const updateTicketPrice = () => {
-    if (selectedButton.value === '30000') {
-        ticketPrice.value = 30000;
-    } else if (selectedButton.value === '20000') {
-        ticketPrice.value = 20000;
-    } else if (selectedButton.value === '10000') {
-        ticketPrice.value = 10000;
-    }
-};
-
-watch(selectedButton, () => {
-    updateTicketPrice();
-});
-
-
-
-
-const daysLeft = ref(null);
-const timePhrase = ref(null);
-
-
-
-
-const calculateDaysLeft = (daysLeft) => {
-    // const eventDate = new Date('2024-03-09T15:00:00+03:00');
-    const eventDate = new Date(daysLeft);
-
+const calculateDaysLeft = () => {
+    // const eventDate = new Date('2024-03-07 22:00:00 +0000 UTC');
+    const eventDate = new Date('2024-03-24T15:00:00+03:00');
     const currentDate = new Date();
     const differenceInTime = eventDate.getTime() - currentDate.getTime();
-    const differenceInHours = differenceInTime / (1000 * 3600);
-    const daysLeftValue = Math.floor(differenceInHours / 24); // Number of full days left
-    const remainingHours = Math.ceil(differenceInHours % 24); // Remaining hours
-    // console.log(daysLeftValue)
-    // console.log(remainingHours)
-    if (daysLeftValue <= 0 && remainingHours >= 0 && remainingHours < 9) {
-        return 'Today'
-    }
-    else if (daysLeftValue <= 0 && remainingHours >= 9 && remainingHours <= 24) {
-        return 1
-    }
-    else if (daysLeftValue < 0 && remainingHours >= -6) {
-        return 'Now'
-    }
-    else if (daysLeftValue <= 0 && remainingHours <= -6) {
-        return 'Concluded'
-
-    }
-    else {
-        if (remainingHours >= 12) {
-            return daysLeftValue
-            // daysLeft.value = daysLeftValue + 1; // Approximate to the higher value
-        } else {
-            return daysLeftValue
-            // daysLeft.value = daysLeftValue; // Approximate to the lower value
-        }
-    }
+    const differenceInMinutes = Math.ceil(differenceInTime / (1000 * 60));
+    const differenceInHours = Math.ceil(differenceInTime / (1000 * 3600));
+    const differenceInDays = Math.ceil(differenceInTime / (1000 * 3600 * 24));
+    console.log(differenceInTime)
+    console.log(differenceInMinutes)
+    console.log(differenceInHours)
+    console.log(differenceInDays)
+    return differenceInDays
 };
-
-
-const determineTimePhrase = () => {
-    const eventDate = new Date('2024-03-10T15:00:00+03:00');
-    const currentDate = new Date();
-    const differenceInHours = Math.ceil((eventDate.getTime() - currentDate.getTime()) / (1000 * 3600));
-    if (differenceInHours <= 8) {
-        return 'Today';
-    } else if (differenceInHours < 1) {
-        return 'Now';
-    } else {
-        return null;
-    }
-};
-
-// Call functions to initialize values
-calculateDaysLeft();
-timePhrase.value = determineTimePhrase();
-
-
 
 const pay = async () => {
     // showErrorMessage.value = true; // Show error message
     isLoading.value = true
 
     const data = {
-        ticket_id: ticketPrice.value === 30000 ? '245f618a-db8a-4b55-a707-67b83a29086e' : '402085c1-05d4-4779-b95a-2c51e068b51d',
+        ticket_id: ticketPrice.value === 400 ? '245f618a-db8a-4b55-a707-67b83a29086e' : '402085c1-05d4-4779-b95a-2c51e068b51d',
         quantity: numberOfTickets.value,
         phone: phoneNumber.value
     }
@@ -471,7 +408,7 @@ const pay = async () => {
 
                 // Redirect to payment link in the same tab
                 window.location.href = paymentLink.value;
-                // isLoading.value = false
+                isLoading.value = false
 
             }
         })
@@ -511,6 +448,19 @@ const clearErrorMessage = () => {
     errorMessage.value = '';
 };
 
+// Watch for changes in checkbox states and update ticketPrice accordingly
+watch([isVVIPChecked, isVIPChecked, isRegularChecked], () => {
+    if (isVVIPChecked.value) {
+        ticketPrice.value = 30000;
+    } else if (isVIPChecked.value) {
+        ticketPrice.value = 20000;
+    } else if (isRegularChecked.value) {
+        ticketPrice.value = 10000;
+    } else {
+        ticketPrice.value = 0; // Reset ticket price if no checkbox is checked
+    }
+});
+
 const closeModal = () => {
     showInitiatePaymentModal.value = false;
 };
@@ -541,7 +491,22 @@ const amount = computed(() => {
     return numberOfTickets.value * ticketPrice.value;
 });
 
+// const ticketPrice = computed(() => {
+//     let price = 0;
+//         if (this.vipSelected) {
+//             price += 30000;
+//         }
+//         if (this.regularSelected) {
+//             price += 10000;
+//         }
+//         // Add more conditions for other ticket types if needed
+//         return price;
+// })
+
+
+
 </script>
+
 
 
 <style scoped>
@@ -589,71 +554,6 @@ const amount = computed(() => {
 
 .iframe-no-scroll {
     overflow: hidden;
-}
-
-input[type="radio"].custom-radio {
-    /* Hide the default radio button */
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    /* Define the size of the custom radio button */
-    width: 20px;
-    height: 20px;
-    /* Add custom border and background */
-    border: 1px solid #000;
-    border-radius: 50%;
-    background-color: #fff;
-    /* Center the custom radio button */
-    display: inline-block;
-    vertical-align: middle;
-    position: relative;
-}
-
-/* Define styles for the radio button when it's selected */
-input[type="radio"].custom-radio:checked {
-    /* Change the background color when selected */
-    background-color: #D3AF35;
-    /* Change this to your desired color */
-    /* You can also change other styles like border color or box-shadow */
-}
-
-
-/* Styles for labels */
-.label-container {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-/* Adjustments for small devices */
-@media (max-width: 768px) {
-    .label-container {
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .label-container label {
-        margin-right: 10px;
-    }
-
-    input[type="radio"].custom-radio {
-
-        width: 17px;
-        height: 17px;
-
-    }
-}
-
-/* Hide the label on small devices */
-.label-container .vip-label {
-    display: none;
-}
-
-/* Adjustments for small devices */
-@media (min-width: 769px) {
-    .label-container .vip-label {
-        display: inline;
-    }
 }
 
 /* Additional styles as needed */

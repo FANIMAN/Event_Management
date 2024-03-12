@@ -12,7 +12,7 @@
                     <div class="flex flex-col gap-1">
                         <!-- Title -->
                         <!-- <h2 class="text-xl font-bold">{{ eventDetails && eventDetails.name }}</h2>    -->
-                        <h2 class="text-2xl font-bold">ዴልፊን ሚካኤል vs ዴንዜል ኦኒያንጎ</h2>
+                        <h2 class="text-2xl font-bold">ዶልፊን ሚካኤል vs ዴንዜል ኦኒያንጎ</h2>
 
                         <!-- Description -->
                         <div class="flex gap-4 items-center">
@@ -187,26 +187,59 @@
                         <div>
 
 
+
+                            <!-- <div class="flex gap-10">
+                                <button @click="selectButton(30000)"
+                                    :class="{ 'border border-black]': selectedButton === 30000 }"
+                                    class="px-3 py-2 text-white bg-[#D3AF35] border-black text-sm rounded-md">30,000</button>
+                                <button @click="selectButton(20000)"
+                                    :class="{ 'border border-black]': selectedButton === 20000 }"
+                                    class="px-3 py-2 text-white bg-[#D3AF35] border-black text-sm rounded-md">20,000</button>
+                                <button @click="selectButton(10000)"
+                                    :class="{ 'border border-black]': selectedButton === 10000 }"
+                                    class="px-3 py-2 text-white bg-[#D3AF35] border-black text-sm rounded-md">10,000</button>
+                            </div> -->
+
                             <div class="flex gap-10">
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" v-model="selectedButton" value="30000" class="custom-radio">
-                                    <span class="hidden md:inline">VVIP - </span>
-                                    <span>30,000</span>
+    <label class="flex items-center gap-2">
+        <input type="radio" v-model="selectedButton" value="30000" class="custom-radio">
+        <span class="hidden md:inline">VVIP - </span>
+        <span>30,000</span>
 
-                                </label>
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" v-model="selectedButton" value="20000" class="custom-radio">
-                                    <span class="hidden md:inline">VIP -</span>
-                                    <span>20,000</span>
+    </label>
+    <label class="flex items-center gap-2">
+        <input type="radio" v-model="selectedButton" value="20000" class="custom-radio">
+        <span class="hidden md:inline">VIP -</span>
+        <span>20,000</span>
 
-                                </label>
-                                <label class="flex items-center gap-2">
-                                    <input type="radio" v-model="selectedButton" value="10000" class="custom-radio">
-                                    <span class="hidden md:inline">Regular -</span>
-                                    <span>10,000</span>
+    </label>
+    <label class="flex items-center gap-2">
+        <input type="radio" v-model="selectedButton" value="10000" class="custom-radio">
+        <span class="hidden md:inline">Regular -</span>
+        <span>10,000</span>
 
-                                </label>
-                            </div>
+    </label>
+</div>
+
+
+
+<!-- <div class="flex gap-10">
+    <label class="label-container">
+        <input type="radio" v-model="selectedButton" value="30000" class="custom-radio">
+        <span>VVIP</span>
+        <span>30,000</span>
+    </label>
+    <label class="label-container">
+        <input type="radio" v-model="selectedButton" value="20000" class="custom-radio">
+        <span>VIP</span>
+        <span>20,000</span>
+    </label>
+    <label class="label-container">
+        <input type="radio" v-model="selectedButton" value="10000" class="custom-radio">
+        <span>Regular</span>
+        <span>10,000</span>
+    </label>
+</div> -->
 
 
 
@@ -389,6 +422,27 @@ watch(selectedButton, () => {
 const daysLeft = ref(null);
 const timePhrase = ref(null);
 
+// const calculateDaysLeft = () => {
+//     const eventDate = new Date('2024-03-10T22:00:00+03:00');
+//     const currentDate = new Date();
+//     const differenceInTime = eventDate.getTime() - currentDate.getTime();
+//     const differenceInHours = differenceInTime / (1000 * 3600);
+//     const daysLeftValue = Math.floor(differenceInHours / 24); // Number of full days left
+//     const remainingHours = Math.ceil(differenceInHours % 24); // Remaining hours
+
+//     console.log('differenceInTime', differenceInTime)
+//     console.log('differenceInHours', differenceInHours)
+//     console.log('daysLeftValue', daysLeftValue)
+//     console.log('remainingHours', remainingHours)
+
+//     if (daysLeftValue <= 0 && remainingHours >= 0 && remainingHours < 24) {
+//         daysLeft.value = 'Today';
+//     } else if (daysLeftValue < 0) {
+//         daysLeft.value = 'Now';
+//     } else {
+//         daysLeft.value = daysLeftValue;
+//     }
+// };
 
 
 
@@ -471,7 +525,7 @@ const pay = async () => {
 
                 // Redirect to payment link in the same tab
                 window.location.href = paymentLink.value;
-                // isLoading.value = false
+                isLoading.value = false
 
             }
         })
@@ -612,8 +666,7 @@ input[type="radio"].custom-radio {
 /* Define styles for the radio button when it's selected */
 input[type="radio"].custom-radio:checked {
     /* Change the background color when selected */
-    background-color: #D3AF35;
-    /* Change this to your desired color */
+    background-color: #D3AF35; /* Change this to your desired color */
     /* You can also change other styles like border color or box-shadow */
 }
 
@@ -631,17 +684,16 @@ input[type="radio"].custom-radio:checked {
         flex-direction: row;
         align-items: center;
     }
-
     .label-container label {
         margin-right: 10px;
     }
 
     input[type="radio"].custom-radio {
 
-        width: 17px;
-        height: 17px;
+    width: 17px;
+    height: 17px;
 
-    }
+}
 }
 
 /* Hide the label on small devices */
@@ -655,6 +707,5 @@ input[type="radio"].custom-radio:checked {
         display: inline;
     }
 }
-
 /* Additional styles as needed */
 </style>
